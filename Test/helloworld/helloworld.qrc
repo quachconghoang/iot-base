@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>images/Nvidia.png</file>
+	<file>images/ROG.png</file>
+    </qresource>
+</RCC>
