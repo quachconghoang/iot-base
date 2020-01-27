@@ -28,6 +28,6 @@ add_executable(helloworld
     helloworld.qrc
 	mainwindow.ui
 	mainwindow.cpp
-)
+	mainwindow.h)
 
 target_link_libraries(helloworld Qt5::Widgets ${OpenCV_LIBS})

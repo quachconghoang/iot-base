@@ -1,5 +1,4 @@
 #include "opencv2/opencv.hpp"
-cv::cudacodec::VideoReader * nvCap;
 
 int main()
 {
