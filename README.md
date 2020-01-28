@@ -4,3 +4,22 @@ FFMPEG configuration:
 OPENCV build with CUDA CODEC:
 ...
 
+Installation packages:
+- QT5default + QTcreator
+- Cuda 10.1 (deb)
+- TensorRT 6 (deb) (bonus cudnn7)
+
+Communication modules:
+- OpenCV with CUDA and NVCODEC
+- MQTT & MONGODB (CXX)
+- MAVSDK
+
+Problems:
+- WTH with FFMPEG default + NVCodec?
+
+References:
+- https://github.com/onnx/onnx-tensorrt
+- https://github.com/NVIDIA-AI-IOT/torch2trt
+- https://github.com/NVIDIA/TensorRT/tree/release/7.0/samples
+- https://github.com/NVIDIA/tensorrt-laboratory
+- https://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html
