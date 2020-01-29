@@ -1,6 +1,9 @@
 FFMPEG configuration:
 --enable-cuda-nvcc --enable-cuvid --enable-nvenc --enable-nonfree --enable-libnpp --enable-pic --enable-shared --extra-cflags=-I/usr/local/cuda/include --extra-ldflags=-L/usr/local/cuda/lib64
 
+QT5 configuration:
+./configure -opensource -confirm-license -nomake examples -nomake tests -sqlite -skip webengine -skip multimedia -skip tools -skip sensors -skip networkauth -skip purchasing -silent
+
 OPENCV build with CUDA CODEC:
 ...
 
