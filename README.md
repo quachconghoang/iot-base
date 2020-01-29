@@ -1,11 +1,34 @@
 FFMPEG configuration:
---enable-cuda-nvcc --enable-cuvid --enable-nvenc --enable-nonfree --enable-libnpp --enable-pic --enable-shared --extra-cflags=-I/usr/local/cuda/include --extra-ldflags=-L/usr/local/cuda/lib64
+./configure --enable-cuda-nvcc \
+--enable-cuvid \
+--enable-nvenc \
+--enable-nonfree \
+--enable-libnpp \
+--enable-pic \
+--enable-shared \
+--extra-cflags=-I/usr/local/cuda/include \
+--extra-ldflags=-L/usr/local/cuda/lib64
 
 QT5 configuration:
-./configure -opensource -confirm-license -nomake examples -nomake tests -sqlite -skip webengine -skip multimedia -skip tools -skip sensors -skip networkauth -skip purchasing -silent
+./configure -opensource \
+-confirm-license \
+-nomake examples \
+-nomake tests \
+-sqlite \
+-skip webengine \
+-skip webchannel \
+-skip websockets \
+-skip webview \
+-skip wayland \
+-skip winextras \
+-skip multimedia \
+-skip sensors \
+-skip networkauth \
+-skip purchasing \
+-silent
 
 OPENCV build with CUDA CODEC:
-...
+cmake ../ (sth else but gstreamer seem fucking delay)
 
 Installation packages:
 - QT5default + QTcreator
