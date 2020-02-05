@@ -3,6 +3,7 @@
 //
 
 #include "VideosManager.h"
+#include <functional>
 
 VideosManager::VideosManager() {
 
@@ -17,31 +18,40 @@ void VideosManager::loadConfigFile(std::string filePath) {
     tInfo.psw = std::string(fs["user-pwd"]);
 
     cv::FileNode tLocations = fs["locations"];
+    int num_sessions = tLocations.size();
+    m_threads.resize(num_sessions);
+    __globVideoThreads.resize(num_sessions);
+
     for (int i = 0; i < tLocations.size(); i++) {
         tInfo.location = std::string(tLocations[i]);
         VideoSession tSession;
         tSession.setCamInfo(tInfo);
-        tSession.sessionID = std::to_string(i);
+        tSession.setSessionID(i);
         m_sessions.push_back(tSession);
     }
-
-//    std::string vInput = vProtocol + vUsrName + ":" + vUsrPsw + "@" + vIP;
 }
 
 void VideosManager::connectToCameras() {
     int numThreads = m_sessions.size();
-    m_threads.resize(numThreads);
-
     for (int i = 0; i < numThreads; ++i) {
-        m_sessions[i].startSession();
-        // LOOP ...
-//        m_threads[i] = std::thread(&VideoSession::loop, m_sessions[i]);
-//        m_threads.push_back(th);
+        m_threads[i] = std::thread(&VideoSession::captureFrames, m_sessions[i]);
+    }
+}
+
+void VideosManager::disconnect() {
+
+    for (int i = 0; i < m_threads.size(); ++i)
+        __globVideoThreads[i] = VS_CLOSING;
+
+    for (int i = 0; i < m_threads.size(); ++i)
+    {
+        if(m_threads[i].joinable())
+            m_threads[i].join();
     }
 
-    for (int i = 0; i < numThreads; ++i) {
-        m_threads[i].join();
-    }
+    for (int i = 0; i < m_threads.size(); ++i)
+        __globVideoThreads[i] = VS_CLOSED;
+
 }
 
 VideosManager::~VideosManager() {

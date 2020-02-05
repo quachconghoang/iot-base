@@ -14,16 +14,19 @@ public:
     ~VideosManager();
     void loadConfigFile(std::string filePath);
     void connectToCameras();
+    void disconnect();
+
+    std::vector<VideoSession> m_sessions;
+
+protected:
+    std::vector<std::thread> m_threads;
 
 private:
-    std::vector<VideoSession> m_sessions;
-    std::vector<std::thread> m_threads;
     float m_fps_preview = 25;
     float m_fps_process = 1;
     float m_fps_of = 2;
     cv::Size m_size_prev;
     cv::Size m_size_proc;
 };
-
 
 #endif //MULTICAMERA_VIDEOSMANAGER_H
