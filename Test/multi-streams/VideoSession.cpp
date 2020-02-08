@@ -12,7 +12,10 @@ VideoSession::VideoSession()
     d_RawImg = new cv::cuda::GpuMat(RAW_IMG_HEIGHT, RAW_IMG_WIDTH, CV_8UC4);
     d_ProcImg = new cv::cuda::GpuMat(PROC_IMG_HEIGHT, PROC_IMG_WIDTH, CV_8UC4);
     h_Img = cv::Mat(PROC_IMG_HEIGHT, PROC_IMG_WIDTH, CV_8UC4);
+    img_proc = cv::Mat(PROC_IMG_HEIGHT, PROC_IMG_WIDTH, CV_8UC3);
+    img_prev = cv::Mat(PROC_IMG_HEIGHT, PROC_IMG_WIDTH, CV_8UC3);
     m_stream = new cv::cuda::Stream();
+    m_sample_tick = cv::getTickCount();
 }
 
 VideoSession::~VideoSession(){}
@@ -33,6 +36,8 @@ void VideoSession::captureFrames() {
         if(nvCap->nextFrame(*d_RawImg, *m_stream)){
             cv::cuda::resize(*d_RawImg, *d_ProcImg,  cv::Size(PROC_IMG_WIDTH, PROC_IMG_HEIGHT), 0 ,0 , cv::INTER_NEAREST, *m_stream);
             d_ProcImg->download(h_Img, *m_stream);
+
+            getSampling(h_Img);
         }else{
             std::cout << "No GPU frame" << std::endl;
         }
@@ -41,5 +46,19 @@ void VideoSession::captureFrames() {
     }
 
     nvCap.release();
-    std::cout << m_id << " ... CLOSED ... \n";
+    std::cout << "Camera " << m_id << " : CLOSED ... \n";
+    __globVideoThreads[m_id] = VS_CLOSED;
+}
+
+void VideoSession::getSampling(cv::Mat &_img) {
+    double _interval = 1000 * (cv::getTickCount() - m_sample_tick)/cv::getTickFrequency();
+    if(_interval > QUEUEING_INTERVAL_TIME)
+    {
+        img_proc.copyTo(img_prev);
+        cv::cvtColor(h_Img,img_proc, cv::COLOR_BGRA2BGR);
+        m_sample_tick = cv::getTickCount();
+//        std::cout << _interval << std::endl;
+// Do Optical flow ???
+    }
+
 }

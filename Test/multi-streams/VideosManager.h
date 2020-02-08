@@ -16,17 +16,18 @@ public:
     void connectToCameras();
     void disconnect();
 
-    std::vector<VideoSession> m_sessions;
+    std::vector<VideoSession> sessions;
 
 protected:
-    std::vector<std::thread> m_threads;
+    std::vector<std::thread> threads_video;
 
 private:
+    bool checkVideosStatus();
     float m_fps_preview = 25;
     float m_fps_process = 1;
     float m_fps_of = 2;
-    cv::Size m_size_prev;
-    cv::Size m_size_proc;
+
+    int64 t1;
 };
 
 #endif //MULTICAMERA_VIDEOSMANAGER_H

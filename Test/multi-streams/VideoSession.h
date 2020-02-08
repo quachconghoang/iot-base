@@ -12,10 +12,12 @@
 
 #define RAW_IMG_WIDTH 1920
 #define RAW_IMG_HEIGHT 1080
-#define PROC_IMG_WIDTH 960
-#define PROC_IMG_HEIGHT 540
+#define PROC_IMG_WIDTH 640
+#define PROC_IMG_HEIGHT 360
 
+// INTERVAL TIME in Milliseconds
 #define CAPTURE_INTERVAL_TIME 30
+#define QUEUEING_INTERVAL_TIME 1000
 
 struct IPCamInfo
 {
@@ -41,13 +43,14 @@ public:
 
     cv::Ptr<cv::cudacodec::VideoReader> nvCap;
 
-
     void setCamInfo(IPCamInfo & _info);
     void setSessionID(int id);
     IPCamInfo getInfo();
     void captureFrames();
 
     cv::Mat h_Img;
+    cv::Mat img_proc;
+    cv::Mat img_prev;
 
 protected:
 
@@ -55,6 +58,9 @@ protected:
 private:
     IPCamInfo m_info;
     int m_id;
+    int64 m_sample_tick;
+
+    void getSampling(cv::Mat & _img);
 
     cv::Ptr<cv::cuda::Stream> m_stream;
     cv::Ptr<cv::cuda::GpuMat> d_RawImg;

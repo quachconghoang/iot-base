@@ -1,14 +1,3 @@
-FFMPEG configuration:
-./configure --enable-cuda-nvcc \
---enable-cuvid \
---enable-nvenc \
---enable-nonfree \
---enable-libnpp \
---enable-pic \
---enable-shared \
---extra-cflags=-I/usr/local/cuda/include \
---extra-ldflags=-L/usr/local/cuda/lib64
-
 QT5 configuration:
 ./configure -opensource \
 -confirm-license \
@@ -41,7 +30,18 @@ Communication modules:
 - MAVSDK
 
 Problems:
-- WTH with FFMPEG default + NVCodec?
+- WTH with FFMPEG default + NVCodec -> OK!
+
+FFMPEG configuration:
+./configure --enable-cuda-nvcc \
+--enable-cuvid \
+--enable-nvenc \
+--enable-nonfree \
+--enable-libnpp \
+--enable-pic \
+--enable-shared \
+--extra-cflags=-I/usr/local/cuda/include \
+--extra-ldflags=-L/usr/local/cuda/lib64
 
 References:
 - https://github.com/onnx/onnx-tensorrt

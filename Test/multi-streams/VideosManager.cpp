@@ -19,7 +19,7 @@ void VideosManager::loadConfigFile(std::string filePath) {
 
     cv::FileNode tLocations = fs["locations"];
     int num_sessions = tLocations.size();
-    m_threads.resize(num_sessions);
+    threads_video.resize(num_sessions);
     __globVideoThreads.resize(num_sessions);
 
     for (int i = 0; i < tLocations.size(); i++) {
@@ -27,33 +27,38 @@ void VideosManager::loadConfigFile(std::string filePath) {
         VideoSession tSession;
         tSession.setCamInfo(tInfo);
         tSession.setSessionID(i);
-        m_sessions.push_back(tSession);
+        sessions.push_back(tSession);
     }
 }
 
 void VideosManager::connectToCameras() {
-    int numThreads = m_sessions.size();
+    int numThreads = sessions.size();
     for (int i = 0; i < numThreads; ++i) {
-        m_threads[i] = std::thread(&VideoSession::captureFrames, m_sessions[i]);
+        threads_video[i] = std::thread(&VideoSession::captureFrames, sessions[i]);
     }
 }
 
-void VideosManager::disconnect() {
-
-    for (int i = 0; i < m_threads.size(); ++i)
+void VideosManager::disconnect()
+{
+    for (int i = 0; i < threads_video.size(); ++i)
         __globVideoThreads[i] = VS_CLOSING;
 
-    for (int i = 0; i < m_threads.size(); ++i)
+    for (int i = 0; i < threads_video.size(); ++i)
     {
-        if(m_threads[i].joinable())
-            m_threads[i].join();
+        if(threads_video[i].joinable())
+            threads_video[i].join();
     }
+}
 
-    for (int i = 0; i < m_threads.size(); ++i)
-        __globVideoThreads[i] = VS_CLOSED;
-
+bool VideosManager::checkVideosStatus() {
+    bool all_opened = true;
+    for (int i=0; i < threads_video.size(); i++){
+//        std::cout << i << "Status: " << (__globVideoThreads[i] == VS_OPENED) << std::endl;
+        all_opened = all_opened && (__globVideoThreads[i] == VS_OPENED);
+    }
+    return all_opened;
 }
 
 VideosManager::~VideosManager() {
-
+    cv::getTickCount();
 }
