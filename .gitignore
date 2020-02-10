@@ -77,7 +77,7 @@ build
 # idea
 .idea
 #Deeplearning
-.uff
-.pb
-.pkl
+*.uff
+*.pb
+*.pkl
 
