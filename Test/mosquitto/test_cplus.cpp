@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 
     mosqpp::lib_init();
 
-    tempconv = new mqtt_tempconv("tempconv", "localhost", 1883);
+    tempconv = new mqtt_tempconv("tempconv", "0.0.0.0", 1883);
     tempconv->loop_forever();
 
     mosqpp::lib_cleanup();

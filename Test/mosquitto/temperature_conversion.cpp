@@ -39,7 +39,7 @@ void mqtt_tempconv::on_message(const struct mosquitto_message *message)
         temp_farenheit = temp_celsius*9.0/5.0 + 32.0;
         snprintf(buf, 50, "%f", temp_farenheit);
         snprintf(buf, 50, "%f", temp_celsius);
-        printf("%f \n", temp_celsius);
+        printf("%s \n", message->payload);
 //        publish(NULL, "temperature/farenheit", strlen(buf), buf);
     }
 }
