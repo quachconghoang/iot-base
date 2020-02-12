@@ -10,6 +10,8 @@ mqtt_tempconv::mqtt_tempconv(const char *id, const char *host, int port) : mosqu
 
     /* Connect immediately. This could also be done by calling
      * mqtt_tempconv->connect(). */
+//    username_pw_set("admin", "admin");
+    topicName=std::string(id);
     connect(host, port, keepalive);
 };
 
@@ -32,13 +34,13 @@ void mqtt_tempconv::on_message(const struct mosquitto_message *message)
     char buf[51];
 
     if(!strcmp(message->topic, topicName.c_str())){
-        memset(buf, 0, 51*sizeof(char));
-        /* Copy N-1 bytes to ensure always 0 terminated. */
-        memcpy(buf, message->payload, 50*sizeof(char));
-        temp_celsius = atof(buf);
-        temp_farenheit = temp_celsius*9.0/5.0 + 32.0;
-        snprintf(buf, 50, "%f", temp_farenheit);
-        snprintf(buf, 50, "%f", temp_celsius);
+//        memset(buf, 0, 51*sizeof(char));
+//        /* Copy N-1 bytes to ensure always 0 terminated. */
+//        memcpy(buf, message->payload, 50*sizeof(char));
+//        temp_celsius = atof(buf);
+//        temp_farenheit = temp_celsius*9.0/5.0 + 32.0;
+//        snprintf(buf, 50, "%f", temp_farenheit);
+//        snprintf(buf, 50, "%f", temp_celsius);
         printf("%s \n", message->payload);
 //        publish(NULL, "temperature/farenheit", strlen(buf), buf);
     }
