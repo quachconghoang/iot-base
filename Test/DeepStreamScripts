@@ -1,0 +1,11 @@
+
+gst-launch-1.0 filesrc location=/home/cit-ws/sample_1080p_h264.mp4 ! qtdemux ! h264parse ! nvv4l2decoder ! m.sink_0 nvstreammux name=m batch-size=1 width=1920 height=1080 ! nvinfer config-file-path=/opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_Yolo/config_infer_primary_yoloV3_tiny.txt batch-size=1 unique-id=1 ! nvvideoconvert ! nvdsosd ! nveglglessink
+
+
+gst-launch-1.0 filesrc location=/home/cit-ws/sample_1080p_h264.mp4 ! qtdemux ! h264parse ! nvv4l2decoder ! m.sink_0 nvstreammux name=m batch-size=1 width=1920 height=1080 ! nvof preset-level=2 ! tee name=t ! queue ! nvofvisual ! nvmultistreamtiler width=640 height=360 ! nveglglessink t. ! queue ! nvmultistreamtiler width=640 height=360 ! nvvideoconvert ! nveglglessink
+
+... BUG
+
+gst-launch-1.0 rtspsrc location=rtsp://admin:1234Abc.@10.10.0.163:554/Streaming/Channels/101/ latency=300
+
+gst-launch-1.0 rtspsrc location=rtsp://admin:1234Abc.@10.10.0.163:554/Streaming/Channels/101/ latency=300 ! rtph265depay ! h265parse ! nvv4l2decoder ! m.sink_0 nvstreammux name=m batch-size=1 width=1920 height=1080 ! nvof preset-level=2 ! tee name=t ! queue ! nvofvisual ! nvmultistreamtiler width=640 height=360 ! nveglglessink t. ! queue ! nvmultistreamtiler width=640 height=360 ! nvvideoconvert ! nveglglessink

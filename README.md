@@ -43,6 +43,11 @@ FFMPEG configuration:
 --extra-cflags=-I/usr/local/cuda/include \
 --extra-ldflags=-L/usr/local/cuda/lib64
 
+DeepStream:
+- https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html
+- https://www.deeplearning-blog.com/2020/02/03/how-to-detect-objects-with-nvidia-deepstream-4-0-and-yolo-in-5-minutes/
+- https://www.deeplearning-blog.com/2020/02/11/video-optical-flow-using-nvidia-deepstream-4-0/
+
 References:
 - https://github.com/onnx/onnx-tensorrt
 - https://github.com/NVIDIA-AI-IOT/torch2trt
