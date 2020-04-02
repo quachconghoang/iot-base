@@ -103,41 +103,25 @@ bool SampleUffSSD::build()
     initLibNvInferPlugins(&gLogger.getTRTLogger(), "");
 
     auto builder = SampleUniquePtr<nvinfer1::IBuilder>(nvinfer1::createInferBuilder(gLogger.getTRTLogger()));
-    if (!builder)
-    {
-        return false;
-    }
+    if (!builder)    {        return false;    }
 
     auto network = SampleUniquePtr<nvinfer1::INetworkDefinition>(builder->createNetwork());
-    if (!network)
-    {
-        return false;
-    }
+    if (!network)    {        return false;    }
 
     auto config = SampleUniquePtr<nvinfer1::IBuilderConfig>(builder->createBuilderConfig());
-    if (!config)
-    {
-        return false;
-    }
+    if (!config)    {        return false;    }
 
     auto parser = SampleUniquePtr<nvuffparser::IUffParser>(nvuffparser::createUffParser());
-    if (!parser)
-    {
-        return false;
-    }
+    if (!parser)    {        return false;    }
 
     auto constructed = constructNetwork(builder, network, config, parser);
-    if (!constructed)
-    {
-        return false;
-    }
+    if (!constructed)    {        return false;    }
 
     assert(network->getNbInputs() == 1);
     mInputDims = network->getInput(0)->getDimensions();
     assert(mInputDims.nbDims == 3);
 
     assert(network->getNbOutputs() == 2);
-
     return true;
 }
 
@@ -209,35 +193,23 @@ bool SampleUffSSD::infer()
     samplesCommon::BufferManager buffers(mEngine, mParams.batchSize);
 
     auto context = SampleUniquePtr<nvinfer1::IExecutionContext>(mEngine->createExecutionContext());
-    if (!context)
-    {
-        return false;
-    }
+    if (!context)    {        return false;    }
 
     // Read the input data into the managed buffers
     assert(mParams.inputTensorNames.size() == 1);
-    if (!processInput(buffers))
-    {
-        return false;
-    }
+    if (!processInput(buffers))    {        return false;    }
 
     // Memcpy from host input buffers to device input buffers
     buffers.copyInputToDevice();
 
     bool status = context->execute(mParams.batchSize, buffers.getDeviceBindings().data());
-    if (!status)
-    {
-        return false;
-    }
+    if (!status)    {        return false;    }
 
     // Memcpy from device output buffers to host output buffers
     buffers.copyOutputToHost();
 
     // Post-process detections and verify results
-    if (!verifyOutput(buffers))
-    {
-        return false;
-    }
+    if (!verifyOutput(buffers))    {        return false;    }
 
     return true;
 }
