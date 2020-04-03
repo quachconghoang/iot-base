@@ -4,6 +4,8 @@ from PySide2.QtWidgets import (QApplication, QLabel, QPushButton, QMainWindow,
 from PySide2.QtCore import Slot, Qt
 from ui_mainwindow import Ui_MainWindow
 
+from CameraManager import CameraManager
+
 import cv2
 import numpy as np
 
@@ -20,7 +22,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton.setText('abc');
 
 def openCamera():
-    cap = cv2.VideoCapture('rtsp://admin:1234Abc.@192.168.1.142:554/Streaming/Channels/101/')
+    cap = cv2.VideoCapture('rtsp://admin:1234Abc.@192.168.1.10:554/Streaming/Channels/101/')
 
     while (True):
         ret, frame = cap.read()
@@ -32,10 +34,15 @@ def openCamera():
     cap.release()
     cv2.destroyAllWindows()
 
+config = '/home/hoangqc/IP_Camera.json'
+
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    mng = CameraManager()
+    mng.loadInfo(config)
 
-    window = MainWindow()
-    window.show()
-
-    sys.exit(app.exec_())
+    # app = QApplication(sys.argv)
+    #
+    # window = MainWindow()
+    # window.show()
+    #
+    # sys.exit(app.exec_())
