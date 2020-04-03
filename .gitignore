@@ -52,6 +52,7 @@ Makefile*
 *build-*
 *.qm
 *.prl
+*.pyc
 
 # Qt unit tests
 target_wrapper.*
