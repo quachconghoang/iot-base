@@ -33,7 +33,9 @@ class CameraManager():
 
         self.camera_capture = []    #   cv2.Capture
         self.camera_preview = []    #   Mat
+
         self.camera_imgs = []       #   Raw Mat
+        self.process_results = []   #   Processing Results
 
         self.size_raw_imgs = [IMG_w,    IMG_h]
         self.size_previews = [PRV_w,    PRV_h]
@@ -63,7 +65,7 @@ class CameraManager():
     def drawOverLay(self, img, index):
         img= cv2.putText(img, str(index), (10, 40), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                                                     fontScale=1, color=(0, 0, 255), thickness=3)
-##########################
+
     def stream_funtion(self, index):
         cap = self.camera_capture[index]
         self.camera_state[index] = CAMERA_STATUS.STARTED
@@ -79,7 +81,7 @@ class CameraManager():
                 time.sleep(CAM_interval)
         self.camera_state[index] = CAMERA_STATUS.STOPPED
         cap.release()
-        print(index, ' ended ---\n')
+        print('Thread ', index, ' ended ---')
 
     def openStreams(self):
         for i in range(self.camera_number):

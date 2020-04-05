@@ -21,16 +21,17 @@ class MainWindow(QMainWindow):
         self.mng.loadInfo('./IP_Camera.json')
 
         self.ui.pushButton.clicked.connect(self.openCamera)
-        self.img_preview = np.zeros((540, 960, 3), dtype="uint8")
-        self.img_preview.fill(128)
 
-        self.ui.videoPreview.setPixmap(QPixmap.fromImage(QImage(self.img_preview,  PRV_w * 2, PRV_h * 2, QImage.Format_BGR888)))
+        self.img_dumb = np.zeros((540, 960, 3), dtype="uint8")
+        self.img_dumb.fill(128)
+
+        self.img_preview = np.zeros((540, 960, 3), dtype="uint8")
+
+        self.ui.videoPreview.setPixmap(QPixmap.fromImage(QImage(self.img_dumb,  PRV_w * 2, PRV_h * 2, QImage.Format_BGR888)))
         self.thread_video = threading.Thread()
 
         self.need_update_videos = False
         self.need_update_iots = False
-
-        # self.ui.graphicsView.setBackgroundBrush(QImage('./bot.jpg'))
 
     @Slot()
     def openCamera(self):
@@ -49,14 +50,16 @@ class MainWindow(QMainWindow):
 
     def updateVideos(self):
         while(self.need_update_videos):
+
             self.img_preview[0:PRV_h, 0:PRV_w] = self.mng.camera_preview[0]
-            self.img_preview[0:PRV_h, PRV_w:(PRV_w*2)] = self.mng.camera_preview[1]
-            self.img_preview[PRV_h:PRV_h*2, 0:PRV_w] = self.mng.camera_preview[2]
-            self.img_preview[PRV_h:PRV_h*2, PRV_w:PRV_w*2] = self.mng.camera_preview[3]
+            self.img_preview[0:PRV_h, PRV_w:(PRV_w * 2)] = self.mng.camera_preview[1]
+            self.img_preview[PRV_h:PRV_h * 2, 0:PRV_w] = self.mng.camera_preview[2]
+            self.img_preview[PRV_h:PRV_h * 2, PRV_w:PRV_w * 2] = self.mng.camera_preview[3]
+
             self.ui.videoPreview.setPixmap(QPixmap.fromImage(QImage(self.img_preview, PRV_w*2, PRV_h*2, QImage.Format_BGR888)))
             time.sleep(0.033)
-        self.img_preview.fill(128)
-        self.ui.videoPreview.setPixmap(QPixmap.fromImage(QImage(self.img_preview, PRV_w * 2, PRV_h * 2, QImage.Format_BGR888)))
+
+        self.ui.videoPreview.setPixmap(QPixmap.fromImage(QImage(self.img_dumb, PRV_w * 2, PRV_h * 2, QImage.Format_BGR888)))
 
     # def updateVideos(self):
     #     print('Update Video')
@@ -66,3 +69,5 @@ class MainWindow(QMainWindow):
             print('Update IoTs')
             time.sleep(1.0)
 
+
+#   https://stackoverflow.com/questions/58075822/pyside2-and-matplotlib-how-to-make-matplotlib-run-in-a-separate-process-as-i
