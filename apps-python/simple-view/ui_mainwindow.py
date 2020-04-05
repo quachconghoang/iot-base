@@ -20,16 +20,20 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1024, 768)
+        MainWindow.resize(1280, 720)
         self.centralWidget = QWidget(MainWindow)
         self.centralWidget.setObjectName(u"centralWidget")
         self.pushButton = QPushButton(self.centralWidget)
         self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(110, 80, 201, 81))
+        self.pushButton.setGeometry(QRect(770, 560, 200, 40))
+        self.pushButton.setCheckable(True)
+        self.videoPreview = QLabel(self.centralWidget)
+        self.videoPreview.setObjectName(u"videoPreview")
+        self.videoPreview.setGeometry(QRect(10, 10, 960, 540))
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 400, 20))
+        self.menuBar.setGeometry(QRect(0, 0, 1280, 22))
         MainWindow.setMenuBar(self.menuBar)
         self.mainToolBar = QToolBar(MainWindow)
         self.mainToolBar.setObjectName(u"mainToolBar")
@@ -45,6 +49,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Open Streams", None))
+        self.videoPreview.setText(QCoreApplication.translate("MainWindow", u"Video Preview", None))
     # retranslateUi
 
