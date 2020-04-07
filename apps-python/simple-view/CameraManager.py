@@ -93,5 +93,6 @@ class CameraManager():
     def callStoping(self):
         for i in range(self.camera_number):
             self.camera_state[i] = CAMERA_STATUS.STOPPING
-            self.camera_thread[i].join()
+            if self.camera_thread[i].is_alive():
+                self.camera_thread[i].join()
 
