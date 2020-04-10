@@ -10,6 +10,7 @@ from matplotlib.figure import Figure
 
 from ui_mainwindow import Ui_MainWindow
 from CameraManager import CameraManager
+from mapwidget import MapWidget
 import time
 
 import numpy as np
@@ -38,10 +39,10 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.setWindowTitle('Ứng dụng Quản lý Camera Cảnh báo cháy')
+
         self.mng = CameraManager()
         self.mng.loadInfo('./IP_Camera.json')
-
-        self.ui.pushButton.clicked.connect(self.openCamera)
 
         self.img_dumb = np.zeros((540, 960, 3), dtype="uint8")
         self.img_dumb.fill(128)
@@ -50,7 +51,6 @@ class MainWindow(QMainWindow):
 
         self.ui.videoPreview.setPixmap(QPixmap.fromImage(QImage(self.img_dumb,  PRV_w * 2, PRV_h * 2, QImage.Format_BGR888)))
 
-        # self.thread_video = threading.Thread()
         self.timer_videos = QTimer(self)
         self.timer_videos.timeout.connect(self.updateVideos)
         self.timer_videos.setInterval(30)
@@ -60,6 +60,11 @@ class MainWindow(QMainWindow):
         self.timer_iots.timeout.connect(self.updateIoTs)
         self.timer_iots.setInterval(1000)
         self.timer_iots.start()
+
+        self.map_view = MapWidget(self)
+        self.ui.pushButton.clicked.connect(self.openCamera)
+        self.ui.pushBtn_Map.clicked.connect(self.map_view.show)
+
 
     # def MyUI(self):
     #     canvas = Canvas(self, width=8, height=4)
