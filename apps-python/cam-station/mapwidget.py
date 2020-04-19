@@ -15,7 +15,6 @@ class MapWidget(QWidget):
         button_close.setGeometry(QtCore.QRect(1070, 670, 200, 40))
         button_close.clicked.connect(self.hide)
 
-
         # grid = QGridLayout(self)
         # grid.addWidget(button)
 

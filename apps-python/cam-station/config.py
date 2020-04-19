@@ -6,3 +6,5 @@ CAM_interval =  0.015
 
 PROC_w = 480 # Process image width
 PROC_h = 270 # Process image height
+
+k_Title_App = 'Ứng dụng Quản lý Camera Cảnh báo cháy'
