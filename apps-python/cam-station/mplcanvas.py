@@ -12,24 +12,26 @@ class MplCanvas(FigureCanvas):
 
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
-
-        # FigureCanvas.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
         self.xdata = list(range(n_data))
         self.ydata = [0 for i in range(n_data)]
         self.axes.cla()  # Clear the canvas.
-        self.axes.grid(True)
+        self.drawStyle()
         self.axes.plot(self.xdata, self.ydata, 'r')
 
     def updateData(self, newData = {'t': 0,  'h':0}):
         newTemp = newData['t']
         self.ydata = self.ydata[1:] + [newTemp]
         self.axes.cla()  # Clear the canvas.
-        self.axes.grid(True)
+        self.drawStyle()
         self.axes.plot(self.xdata, self.ydata, 'r')
         # Trigger the canvas to update and redraw.
         self.draw()
+
+    def drawStyle(self):
+        self.axes.grid(True)
+        self.axes.set_ylim(0, 100)
 
     def compute_initial_figure(self):
         pass

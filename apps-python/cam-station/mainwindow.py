@@ -77,10 +77,6 @@ class MainWindow(QMainWindow):
         self.ui.videoPreview.setPixmap(
             QPixmap.fromImage(QImage(self.img_preview, PRV_w * 2, PRV_h * 2, QImage.Format_RGB888).rgbSwapped()))
 
-    # @Slot()
-    # def updateIoTs(self):
-    #     print('Update IoTs ...')
-
     def on_iot_message(self, mqttc, obj, msg):
         print('Update IoTs ...')
         payload = json.loads(msg.payload)  # you can use json.loads to convert string to json
@@ -90,5 +86,3 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event:PyQt5.QtGui.QCloseEvent):
         print('App is closing ...')
         self.mng.callStoping()
-
-#   https://stackoverflow.com/questions/58075822/pyside2-and-matplotlib-how-to-make-matplotlib-run-in-a-separate-process-as-i
