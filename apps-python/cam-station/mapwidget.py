@@ -1,20 +1,35 @@
 from PyQt5.QtWidgets import*
 from PyQt5.QtGui import*
 from PyQt5 import QtCore
+from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
+
+from config import *
+from ui_mapwidget import Ui_MapWidget
 
 class MapWidget(QWidget):
     def __init__(self, parent=None):
-        super(MapWidget, self).__init__(parent)
-        self.resize(1280,720)
-        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowStaysOnTopHint)  # <---
+        super(MapWidget, self).__init__()
+        self.ui = Ui_MapWidget()
+        self.ui.setupUi(self)
 
-        self.setWindowTitle('Sơ đồ tòa nhà')
+        self.setWindowTitle(k_Title_AppMap)
+        self.ui.closeButton.clicked.connect(self.hide)
 
-        button_close = QPushButton(self)
-        button_close.setText('Close')
-        button_close.setGeometry(QtCore.QRect(1070, 670, 200, 40))
-        button_close.clicked.connect(self.hide)
+        self.maps = ('./Resources/plan-0.jpg',
+                        './Resources/plan-1.jpg',
+                        './Resources/plan-2.jpg')
+        self.currentMap = QPixmap(self.maps[0])
 
-        # grid = QGridLayout(self)
-        # grid.addWidget(button)
+        self.ui.imageLB.setPixmap(self.currentMap)
+        self.ui.layerSlider.setMaximum(len(self.maps)-1)
+        self.ui.layerSlider.valueChanged.connect(self.changeMap)
 
+    # def show(self):
+    #     super(MapWidget, self).show()
+    #     pass
+
+    @Slot()
+    def changeMap(self):
+        mapID = self.ui.layerSlider.value()
+        self.currentMap = QPixmap(self.maps[mapID])
+        self.ui.imageLB.setPixmap(self.currentMap)
