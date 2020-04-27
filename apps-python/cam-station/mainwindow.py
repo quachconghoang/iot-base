@@ -5,8 +5,6 @@ from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import *
 from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
 
-import random
-
 from ui_mainwindow import Ui_MainWindow
 from CameraManager import CameraManager
 from mapwidget import MapWidget
@@ -30,29 +28,46 @@ class MainWindow(QMainWindow):
         self.mng = CameraManager()
         self.mng.loadInfo('./IP_Camera.json')
 
+        self.setupGUI_Video()
+        self.setupGUI_Iots()
+
+        self.map_view = MapWidget(self)
+        self.ui.pushBtn_Video.clicked.connect(self.openCamera)
+        self.ui.pushBtn_Map.clicked.connect(self.map_view.show)
+
+    def setupGUI_Video(self):
         self.img_dumb = np.zeros((540, 960, 3), dtype="uint8")
         self.img_dumb.fill(128)
-
         self.img_preview = np.zeros((540, 960, 3), dtype="uint8")
-
         self.ui.videoPreview.setPixmap(QPixmap.fromImage(QImage(self.img_dumb,  PRV_w * 2, PRV_h * 2, QImage.Format_RGB888)))
-
         self.timer_videos = QTimer(self)
         self.timer_videos.timeout.connect(self.updateVideos)
         self.timer_videos.setInterval(30)
 
-        # self.MyUI()
+        self.ui.box_cam.currentIndexChanged.connect(self.camera_Changed)
+        self.ui.box_cam.activated.connect(self.camera_Saved)
+        self.camera_Changed()
+        # self.mng.cameraInfo.locations.
+
+    def setupGUI_Iots(self):
         self.mqttc = mqtt.Client()
         self.mqttc.on_message = self.on_iot_message
         self.mqttc.connect("127.0.0.1", 1883, 60)
         self.mqttc.subscribe("test", qos=0)
         self.mqttc.loop_start()
-
         self.iot_canvas = MplCanvas(self.ui.iot_widget, width=9.6, height=1.7, dpi=100)
 
-        self.map_view = MapWidget(self)
-        self.ui.pushBtn_Video.clicked.connect(self.openCamera)
-        self.ui.pushBtn_Map.clicked.connect(self.map_view.show)
+    @Slot()
+    def camera_Changed(self):
+        cIndex = self.ui.box_cam.currentIndex()
+        self.ui.box_loc.setText(self.mng.cameraInfo.locations[cIndex])
+        pass
+
+    @Slot()
+    def camera_Saved(self):
+        cIndex = self.ui.box_cam.currentIndex()
+        self.mng.cameraInfo.locations[cIndex] = self.ui.box_loc.toPlainText()
+        pass
 
     @Slot()
     def openCamera(self):
