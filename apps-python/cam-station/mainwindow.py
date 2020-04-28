@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         self.mqttc = mqtt.Client()
         self.mqttc.on_message = self.on_iot_message
         self.mqttc.connect("127.0.0.1", 1883, 60)
-        self.mqttc.subscribe("test", qos=0)
+        self.mqttc.subscribe("local/test", qos=0)
         self.mqttc.loop_start()
         self.iot_canvas = MplCanvas(self.ui.iot_widget, width=9.6, height=1.7, dpi=100)
 
