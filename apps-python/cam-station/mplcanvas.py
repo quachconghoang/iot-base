@@ -31,7 +31,7 @@ class MplCanvas(FigureCanvas):
 
     def drawStyle(self):
         self.axes.grid(True)
-        self.axes.set_ylim(0, 100)
+        self.axes.set_ylim(ymin=0,ymax=100)
 
     def compute_initial_figure(self):
         pass
