@@ -15,9 +15,9 @@ class MapWidget(QWidget):
         self.setWindowTitle(k_Title_AppMap)
         self.ui.closeButton.clicked.connect(self.hide)
 
-        self.maps = ('./Resources/plan-0.jpg',
-                        './Resources/plan-1.jpg',
-                        './Resources/plan-2.jpg')
+        self.maps = ('./Resources/01.png','./Resources/02.png','./Resources/03.png',
+                     './Resources/04.png','./Resources/05.png','./Resources/06.png',
+                     './Resources/07.png')
         self.currentMap = QPixmap(self.maps[0])
 
         self.ui.imageLB.setPixmap(self.currentMap)
