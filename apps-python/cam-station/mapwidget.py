@@ -13,6 +13,7 @@ class MapWidget(QWidget):
         self.ui.setupUi(self)
 
         self.setWindowTitle(k_Title_AppMap)
+        self.setFixedSize(1120,840)
         self.ui.closeButton.clicked.connect(self.hide)
 
         self.maps = ('./Resources/01.png','./Resources/02.png','./Resources/03.png',
