@@ -86,6 +86,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def updateVideos(self):
+        # self.mng.callSSD()
         self.img_preview[0:PRV_h, 0:PRV_w] = self.mng.camera_preview[0]
         self.img_preview[0:PRV_h, PRV_w:(PRV_w * 2)] = self.mng.camera_preview[1]
         self.img_preview[PRV_h:PRV_h * 2, 0:PRV_w] = self.mng.camera_preview[2]

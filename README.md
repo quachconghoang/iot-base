@@ -29,19 +29,8 @@ Communication modules:
 - MQTT & MONGODB (CXX)
 - MAVSDK
 
-Problems:
-- WTH with FFMPEG default + NVCodec -> OK!
-
-FFMPEG configuration:
-./configure --enable-cuda-nvcc \
---enable-cuvid \
---enable-nvenc \
---enable-nonfree \
---enable-libnpp \
---enable-pic \
---enable-shared \
---extra-cflags=-I/usr/local/cuda/include \
---extra-ldflags=-L/usr/local/cuda/lib64
+Download weight file from https://drive.google.com/file/d/1ca6kt7WDiMkcEVOJJ-Ug-60U0GsC2-Pd/view?usp=sharing 
+Put weight file to SSDData
 
 DeepStream:
 - https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html

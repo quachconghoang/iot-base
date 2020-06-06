@@ -1,10 +1,18 @@
+import sys
+sys.path.insert(1, 'SSD/')
+from SSDLib import SSDSmoke
+
 import cv2
 import numpy as np
 import threading
+import glob
+import os
+import cv2
+import time
+from PIL import Image
 
 import time
 from enum import Enum
-import re
 
 from config import *
 
@@ -26,6 +34,7 @@ class CameraInfo():
 
 class CameraManager():
     def __init__(self):
+        self.SSDModel = SSDSmoke()
         self.cameraInfo = CameraInfo()
         self.camera_number = 0
 
@@ -90,6 +99,18 @@ class CameraManager():
             self.camera_capture[i] = cv2.VideoCapture(self.cameraInfo.path_at(i))
             self.camera_thread[i] = threading.Thread(target=self.stream_funtion, args=(i,))
             self.camera_thread[i].start()
+
+    def callSSD(self):
+        batch = []
+        for index in range(self.camera_number):
+            frame = cv2.cvtColor(self.camera_imgs[index], cv2.COLOR_BGR2RGB)
+            batch.append(frame)
+        output = self.SSDModel.predict(batch)
+        for index in range(self.camera_number):
+            frame = cv2.cvtColor(output[index], cv2.COLOR_RGB2BGR)
+            self.camera_preview[index] = cv2.resize(frame, dsize=(PRV_w, PRV_h))
+            self.drawOverLay( self.camera_preview[index],index)
+        return
 
     def callStoping(self):
         for i in range(self.camera_number):
