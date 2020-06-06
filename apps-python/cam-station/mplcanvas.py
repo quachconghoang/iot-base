@@ -16,16 +16,24 @@ class MplCanvas(FigureCanvas):
 
         self.xdata = list(range(n_data))
         self.ydata = [0 for i in range(n_data)]
+        self.hdata = [0 for i in range(n_data)]
+
         self.axes.cla()  # Clear the canvas.
         self.drawStyle()
         self.axes.plot(self.xdata, self.ydata, 'r')
 
     def updateData(self, newData = {'t': 0, 'h':0, 'MQ7':0}):
+
         newTemp = newData['t']
+        newHumidity = newData['h']
+
         self.ydata = self.ydata[1:] + [newTemp]
+        self.hdata = self.hdata[1:] + [newHumidity]
+
         self.axes.cla()  # Clear the canvas.
         self.drawStyle()
         self.axes.plot(self.xdata, self.ydata, 'r')
+        self.axes.plot(self.xdata, self.hdata, 'b')
         # Trigger the canvas to update and redraw.
         self.draw()
 

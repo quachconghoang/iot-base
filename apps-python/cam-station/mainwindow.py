@@ -24,6 +24,8 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         self.setWindowTitle(k_Title_App)
+        self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
+        self.setFixedSize(1280,800)
 
         self.mng = CameraManager()
         self.mng.loadInfo('./IP_Camera.json')
@@ -53,7 +55,7 @@ class MainWindow(QMainWindow):
         self.mqttc = mqtt.Client()
         self.mqttc.on_message = self.on_iot_message
         self.mqttc.connect("127.0.0.1", 1883, 60)
-        self.mqttc.subscribe("test", qos=0)
+        self.mqttc.subscribe("demo/test", qos=0)
         self.mqttc.loop_start()
         self.iot_canvas = MplCanvas(self.ui.iot_widget, width=9.6, height=1.7, dpi=100)
 

@@ -1,10 +1,9 @@
 {
   "protocol": "rtsp://",
   "locations": 
-  ["192.168.1.142:554/Streaming/Channels/101/",
-    "192.168.1.142:554/Streaming/Channels/101/",
-    "192.168.1.142:554/Streaming/Channels/101/",
-    "192.168.1.142:554/Streaming/Channels/101/"
+  ["10.10.0.163:554/Streaming/Channels/101/",
+    "10.10.0.165:554/Streaming/Channels/101/",
+    "10.10.0.166:554/Streaming/Channels/101/"
   ],
   "user-id": "admin",
   "user-pwd": "1234Abc.",
