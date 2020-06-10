@@ -57,7 +57,10 @@ class MainWindow(QMainWindow):
         self.mqttc.connect("127.0.0.1", 1883, 60)
         self.mqttc.subscribe("demo/test", qos=0)
         self.mqttc.loop_start()
-        self.iot_canvas = MplCanvas(self.ui.iot_widget, width=9.6, height=1.7, dpi=100)
+
+        self.iot_canvas = MplCanvas(self.ui.iot_widget, width=8.0, height=1.6, dpi=100)
+        self.ui.temp_label.setStyleSheet("color: red")
+        self.ui.humid_label.setStyleSheet("color: blue")
 
     @Slot()
     def camera_Changed(self):
@@ -98,7 +101,10 @@ class MainWindow(QMainWindow):
     def on_iot_message(self, mqttc, obj, msg):
         print('Update IoTs ...')
         payload = json.loads(msg.payload)  # you can use json.loads to convert string to json
-        print(payload['t'], payload['h'], payload['MQ7'])  # then you can check the value
+        self.ui.temp_label.setText("T: " + str(payload['t']) + " ℃")
+        self.ui.humid_label.setText("H: " + str(payload['h']) + " %")
+        self.ui.co_label.setText("CO: " + str(payload['MQ7']) + " ppm")
+        # print(payload['t'], payload['h'], payload['MQ7'])  # then you can check the value
         self.iot_canvas.updateData(json.loads(msg.payload))
 
     def closeEvent(self, event:PyQt5.QtGui.QCloseEvent):

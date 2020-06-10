@@ -1,15 +1,7 @@
-import sys
-sys.path.insert(1, 'SSD/')
 from SSDLib import SSDSmoke
-
-import cv2
 import numpy as np
 import threading
-import glob
-import os
 import cv2
-import time
-from PIL import Image
 
 import time
 from enum import Enum

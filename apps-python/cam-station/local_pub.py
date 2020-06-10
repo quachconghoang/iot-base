@@ -40,13 +40,13 @@ mqttc.on_subscribe = on_subscribe
 mqttc.connect("127.0.0.1", 1883, 60)
 
 mqttc.loop_start()
-dict = {'t': 100, 'h': 100}
+dict = {'t': 100, 'h': 100, 'MQ7': 100}
 
 while(True):
     dict['t'] = 25 + randint(0,5)
     dict['h'] = randint(40,80)
     mess = json.dumps(dict)
-    infot = mqttc.publish("test", mess, qos=2)
+    infot = mqttc.publish("demo/test", mess, qos=2)
     infot.wait_for_publish()
     print("looping...", mess)
     time.sleep(10)

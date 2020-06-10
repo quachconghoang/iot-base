@@ -81,4 +81,5 @@ build
 *.uff
 *.pb
 *.pkl
+*.pth
 
