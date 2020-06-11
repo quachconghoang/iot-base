@@ -82,4 +82,5 @@ build
 *.pb
 *.pkl
 *.pth
+IP_Camera.json
 
