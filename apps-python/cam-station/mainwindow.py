@@ -49,6 +49,10 @@ class MainWindow(QMainWindow):
         self.ui.box_cam.currentIndexChanged.connect(self.camera_Changed)
         self.ui.box_cam.activated.connect(self.camera_Saved)
         self.camera_Changed()
+
+        self.ui.check_proc.clicked.connect(self.processStatusChanged)
+        self.ui.cB_Bell.clicked.connect(self.notifcationStatusChanged)
+        self.ui.cB_SMS.clicked.connect(self.notifcationStatusChanged)
         # self.mng.cameraInfo.locations.
 
     def setupGUI_Iots(self):
@@ -88,6 +92,17 @@ class MainWindow(QMainWindow):
                                          PRV_w * 2, PRV_h * 2, QImage.Format_RGB888)))
 
     @Slot()
+    def processStatusChanged(self):
+
+        print("..." + str(self.ui.check_proc.checkState()))
+
+    @Slot()
+    def notifcationStatusChanged(self):
+
+        print("...")
+
+
+    @Slot()
     def updateVideos(self):
         # self.mng.callSSD()
         self.img_preview[0:PRV_h, 0:PRV_w] = self.mng.camera_preview[0]
@@ -106,6 +121,9 @@ class MainWindow(QMainWindow):
         self.ui.co_label.setText("CO: " + str(payload['MQ7']) + " ppm")
         # print(payload['t'], payload['h'], payload['MQ7'])  # then you can check the value
         self.iot_canvas.updateData(json.loads(msg.payload))
+
+    def alarming_message(self):
+        exit()
 
     def closeEvent(self, event:PyQt5.QtGui.QCloseEvent):
         print('App is closing ...')

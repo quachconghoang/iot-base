@@ -61,9 +61,9 @@
     <property name="geometry">
      <rect>
       <x>970</x>
-      <y>0</y>
+      <y>10</y>
       <width>300</width>
-      <height>221</height>
+      <height>171</height>
      </rect>
     </property>
     <property name="title">
@@ -72,8 +72,8 @@
     <widget class="QPushButton" name="pushBtn_Video">
      <property name="geometry">
       <rect>
-       <x>9</x>
-       <y>170</y>
+       <x>10</x>
+       <y>90</y>
        <width>281</width>
        <height>40</height>
       </rect>
@@ -84,26 +84,6 @@
      <property name="checkable">
       <bool>false</bool>
      </property>
-    </widget>
-    <widget class="QComboBox" name="box_protocol">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>80</y>
-       <width>70</width>
-       <height>40</height>
-      </rect>
-     </property>
-     <item>
-      <property name="text">
-       <string>RTSP</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>HTTPS</string>
-      </property>
-     </item>
     </widget>
     <widget class="QCheckBox" name="check_proc">
      <property name="geometry">
@@ -124,7 +104,7 @@
        <x>10</x>
        <y>30</y>
        <width>70</width>
-       <height>40</height>
+       <height>51</height>
       </rect>
      </property>
      <item>
@@ -154,7 +134,7 @@
        <x>90</x>
        <y>30</y>
        <width>200</width>
-       <height>90</height>
+       <height>51</height>
       </rect>
      </property>
      <property name="html">
@@ -279,15 +259,15 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>970</x>
-      <y>230</y>
+      <y>190</y>
       <width>301</width>
-      <height>301</height>
+      <height>341</height>
      </rect>
     </property>
     <property name="title">
      <string>Notification</string>
     </property>
-    <widget class="QCheckBox" name="checkBox_Bell">
+    <widget class="QCheckBox" name="cB_Bell">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -300,7 +280,7 @@ p, li { white-space: pre-wrap; }
       <string>Bell</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_Email">
+    <widget class="QCheckBox" name="cB_SMS">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -310,21 +290,57 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Email</string>
+      <string>SMS</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="cB_SMS">
+    <widget class="QTableWidget" name="tableWidget">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>100</y>
-       <width>92</width>
-       <height>23</height>
+       <y>110</y>
+       <width>261</width>
+       <height>211</height>
       </rect>
      </property>
-     <property name="text">
-      <string>SMS</string>
+     <property name="showGrid">
+      <bool>true</bool>
      </property>
+     <attribute name="horizontalHeaderCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>120</number>
+     </attribute>
+     <row>
+      <property name="text">
+       <string>Quach Cong Hoang</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>Phone number</string>
+      </property>
+     </column>
+     <item row="0" column="0">
+      <property name="text">
+       <string>+84936261441</string>
+      </property>
+     </item>
+     <item row="1" column="0">
+      <property name="text">
+       <string/>
+      </property>
+     </item>
     </widget>
    </widget>
   </widget>
