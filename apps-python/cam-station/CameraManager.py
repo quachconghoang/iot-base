@@ -17,6 +17,8 @@ class CameraInfo():
     def __init__(self):
         self.protocol = 'rtsp://'
         self.locations = []
+        self.properties = []
+        self.full_loc = []
         self.user_id = ''
         self.user_pwd = ''
 
@@ -50,11 +52,16 @@ class CameraManager():
         self.cameraInfo.user_id = fs.getNode('user-id').string()
         self.cameraInfo.user_pwd = fs.getNode('user-pwd').string()
         loc = fs.getNode('locations')
-        self.camera_number = loc.size()
-        print('Number of cam = ', self.camera_number)
+        prop = fs.getNode('properties')
 
-        for i in range(self.camera_number):
+        for i in range(loc.size()):
             self.cameraInfo.locations.append(loc.at(i).string())
+            self.cameraInfo.properties.append(prop.at(i).real())
+            if(self.cameraInfo.properties[i]==0):
+                self.cameraInfo.full_loc.append(self.cameraInfo.path_at(i))
+            else:
+                self.cameraInfo.full_loc.append(loc.at(i).string())
+
             self.camera_state.append(CAMERA_STATUS.STOPPED)
 
             self.camera_preview.append(np.zeros((PRV_h, PRV_w, 3), dtype = "uint8"))
@@ -62,10 +69,14 @@ class CameraManager():
 
             self.camera_capture.append(cv2.VideoCapture())
             self.camera_thread.append(threading.Thread())
-            print(self.cameraInfo.path_at(i))
+            print(self.cameraInfo.full_loc[i])
+
+        self.camera_number = loc.size()
+        print('Number of cam = ', self.camera_number)
+
 
     def drawOverLay(self, img, index):
-        img= cv2.putText(img, str(index), (10, 40), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+        img= cv2.putText(img, str(index), (440, 40), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                                                     fontScale=1, color=(0, 0, 255), thickness=3)
 
     def stream_funtion(self, index):
@@ -88,7 +99,7 @@ class CameraManager():
     def openStreams(self):
         for i in range(self.camera_number):
             print('Opening stream number',i)
-            self.camera_capture[i] = cv2.VideoCapture(self.cameraInfo.path_at(i))
+            self.camera_capture[i] = cv2.VideoCapture(self.cameraInfo.full_loc[i])
             self.camera_thread[i] = threading.Thread(target=self.stream_funtion, args=(i,))
             self.camera_thread[i].start()
 
