@@ -46,11 +46,18 @@ class MainWindow(QMainWindow):
         self.timer_videos.timeout.connect(self.updateVideos)
         self.timer_videos.setInterval(30)
 
-        self.ui.box_cam.currentIndexChanged.connect(self.camera_Changed)
-        self.ui.box_cam.activated.connect(self.camera_Saved)
-        self.camera_Changed()
+        # self.ui.box_cam.currentIndexChanged.connect(self.camera_Changed)
+        # self.ui.box_cam.activated.connect(self.camera_Saved)
+        # self.camera_Changed()
 
-        self.ui.check_proc.clicked.connect(self.processStatusChanged)
+        self.timer_proc = QTimer(self)
+        self.timer_proc.timeout.connect(self.img_processing)
+        self.timer_proc.setInterval(1000)
+        self.timer_proc.start()
+
+        self.ui.check_proc.setEnabled(False)
+
+        # self.ui.check_proc.clicked.connect(self.processStatusChanged)
         self.ui.cB_Bell.clicked.connect(self.notifcationStatusChanged)
         self.ui.cB_SMS.clicked.connect(self.notifcationStatusChanged)
         # self.mng.cameraInfo.locations.
@@ -67,29 +74,27 @@ class MainWindow(QMainWindow):
         self.ui.humid_label.setStyleSheet("color: blue")
 
     @Slot()
-    def camera_Changed(self):
-        cIndex = self.ui.box_cam.currentIndex()
-        self.ui.box_loc.setText(self.mng.cameraInfo.locations[cIndex])
-        pass
-
-    @Slot()
-    def camera_Saved(self):
-        cIndex = self.ui.box_cam.currentIndex()
-        self.mng.cameraInfo.locations[cIndex] = self.ui.box_loc.toPlainText()
-        pass
-
-    @Slot()
     def openCamera(self):
         if(self.ui.pushBtn_Video.text() == 'Open Streams'):
             self.mng.openStreams()
             self.timer_videos.start()
+            self.ui.check_proc.setEnabled(True)
             self.ui.pushBtn_Video.setText('CLOSE')
         else:
             self.timer_videos.stop()
+            self.ui.check_proc.setChecked(False)
+            self.ui.check_proc.setEnabled(False)
+
             self.mng.callStoping()
             self.ui.pushBtn_Video.setText('Open Streams')
             self.ui.videoPreview.setPixmap(QPixmap.fromImage(QImage(self.img_dumb,
                                          PRV_w * 2, PRV_h * 2, QImage.Format_RGB888)))
+
+    @Slot()
+    def img_processing(self):
+        if(self.ui.check_proc.checkState()):
+            if(self.mng.SSDModel.isReady == False): self.mng.SSDModel.preparingModel()
+            print("We can do it ...")
 
     @Slot()
     def processStatusChanged(self):
