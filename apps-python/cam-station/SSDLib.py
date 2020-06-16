@@ -79,6 +79,16 @@ class SSDSmoke:
             draw = draw_boxes(batch[id], boxes, labels, scores, self.class_names).astype(np.uint8)
             ret.append(draw)
         return ret
+
+    def predict_boxes(self, batch):
+        probs = self.forward(batch)
+        ret = []
+        for id in range(len(probs)):
+            boxes, labels, scores = probs[id]['boxes'], probs[id]['labels'], probs[id]['scores']
+            indices = scores > self.threshold
+            boxes = boxes[indices]
+            ret.append(boxes)
+        return ret
         
 # if __name__ == "__main__":
 #     tmp = SSDSmoke()

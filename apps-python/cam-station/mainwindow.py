@@ -92,13 +92,17 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def img_processing(self):
-        if(self.ui.check_proc.checkState()):
+        if(self.ui.check_proc.isChecked()):
             if(self.mng.SSDModel.isReady == False): self.mng.SSDModel.preparingModel()
-            print("We can do it ...")
+
+                # self.mng.drawResult = False
+            self.mng.callSSD()
+            self.mng.drawResult = True
+        else:
+            self.mng.drawResult = False
 
     @Slot()
     def processStatusChanged(self):
-
         print("..." + str(self.ui.check_proc.checkState()))
 
     @Slot()
