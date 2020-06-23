@@ -65,6 +65,7 @@ class MainWindow(QMainWindow):
     def setupGUI_Iots(self):
         self.mqttc = mqtt.Client()
         self.mqttc.on_message = self.on_iot_message
+        self.mqttc.on_publish = self.on_iot_publish
         self.mqttc.connect("127.0.0.1", 1883, 60)
         self.mqttc.subscribe("demo/test", qos=0)
         self.mqttc.loop_start()
@@ -72,6 +73,11 @@ class MainWindow(QMainWindow):
         self.iot_canvas = MplCanvas(self.ui.iot_widget, width=8.0, height=1.6, dpi=100)
         self.ui.temp_label.setStyleSheet("color: red")
         self.ui.humid_label.setStyleSheet("color: blue")
+
+        self.timer_alarm = QTimer(self)
+        self.timer_alarm.timeout.connect(self.alarming_message)
+        self.timer_alarm.setInterval(3000)
+        self.timer_alarm.start()
 
     @Slot()
     def openCamera(self):
@@ -134,8 +140,14 @@ class MainWindow(QMainWindow):
         # print(payload['t'], payload['h'], payload['MQ7'])  # then you can check the value
         self.iot_canvas.updateData(json.loads(msg.payload))
 
+    def on_iot_publish(self, mqttc, obj, mid):
+        # print("pub: " + str(mid) + " - mess = " + str(obj))
+        pass
+
     def alarming_message(self):
-        exit()
+        mess='Hello Trung'
+        infot = self.mqttc.publish("test/alarm", mess, qos=2)
+        infot.wait_for_publish()
 
     def closeEvent(self, event:PyQt5.QtGui.QCloseEvent):
         print('App is closing ...')
