@@ -20,7 +20,7 @@ ssd_model = 'SSDData/model_012500.pth'
 ssd_config = 'SSDData/vgg_ssd300_voc0712.yaml'
 
 class SSDSmoke:
-    def __init__(self, _device="cuda", _cfg = cfg, _ckpt = ssd_model, _threshold = 0.7):
+    def __init__(self, _device="cuda", _cfg = cfg, _ckpt = ssd_model, _threshold = 0.75):
         print("Init detector")
         self.isReady = False
         self.dataset_type = "voc"
@@ -83,12 +83,19 @@ class SSDSmoke:
     def predict_boxes(self, batch):
         probs = self.forward(batch)
         ret = []
+        ret_scores = []
         for id in range(len(probs)):
             boxes, labels, scores = probs[id]['boxes'], probs[id]['labels'], probs[id]['scores']
             indices = scores > self.threshold
-            boxes = boxes[indices]
+            boxes, scores = boxes[indices], scores[indices]
             ret.append(boxes)
-        return ret
+            ret_scores.append(scores)
+
+        # for id in range(len(ret)):
+        #     box,sc = ret[id],ret_scores[id]
+        #     if sc:
+        #         print(id, ": ", box, " - ", sc)
+        return ret, ret_scores
         
 # if __name__ == "__main__":
 #     tmp = SSDSmoke()
