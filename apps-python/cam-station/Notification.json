@@ -1,9 +1,10 @@
 {
   "users":
   [
-    {"name": "QuachCongHoang",  "tel": "0936261441"},
-    {"name": "UET",             "tel": "0999999999"},
-    {"name": "VNU",             "tel": "0969696969"}
+    {"name": "HoangQC",   "tel": "0936261441"},
+    {"name": "TriemPM",   "tel": "0915466881"},
+    {"name": "TrungVM",   "tel": "0848184614"},
+    {"name": "SonNT",     "tel": "0974625485"}
   ],
   "bells message": "demo/bell/01"
 }

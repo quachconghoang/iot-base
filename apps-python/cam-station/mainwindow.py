@@ -1,6 +1,6 @@
 import sys
 import PyQt5
-from PyQt5.QtWidgets import (QApplication, QLabel, QPushButton, QMainWindow, QSizePolicy)
+from PyQt5.QtWidgets import (QApplication, QLabel, QPushButton, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout)
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import *
 from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
@@ -13,6 +13,7 @@ import paho.mqtt.client as mqtt
 from mplcanvas import MplCanvas
 from notification import NotificationServices
 import json
+import threading
 
 import numpy as np
 from config import *
@@ -81,9 +82,21 @@ class MainWindow(QMainWindow):
         self.timer_alarm.setInterval(3000)
         self.timer_alarm.start()
 
+        self.__isNeedSMSAlarm = False
+        self.smsAlarmIDs = []
+
     def setupNotification(self):
         self.ntf = NotificationServices()
         self.ntf.loadConfigs(fname='Notification.json')
+
+        # Draw The Table
+        self.ui.tableWidget.setRowCount(len(self.ntf.user_list))
+        for id in range(len(self.ntf.user_list)):
+            uItem = self.ntf.user_list[id]
+            self.ui.tableWidget.setItem(id, 0, QTableWidgetItem(uItem['name']))
+            self.ui.tableWidget.setItem(id, 1,  QTableWidgetItem(uItem['tel']))
+
+        pass
 
     @Slot()
     def openCamera(self):
@@ -109,6 +122,12 @@ class MainWindow(QMainWindow):
 
                 # self.mng.drawResult = False
             self.mng.callSSD()
+            rs, ids = self.mng.checkAlarming()
+            if rs == True and self.__isNeedSMSAlarm == False:
+                self.__isNeedSMSAlarm = True
+                self.smsAlarmIDs = ids
+                print("Checked ...")
+
             self.mng.drawResult = True
         else:
             self.mng.drawResult = False
@@ -119,7 +138,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def notifcationStatusChanged(self):
-
+        # self.ntf.call_sms(phoneNum="0936261441", contents="Hello, this is a test ...")
         print("...")
 
 
@@ -151,9 +170,19 @@ class MainWindow(QMainWindow):
         pass
 
     def alarming_message(self):
-        mess='Hello Trung'
-        infot = self.mqttc.publish("test/alarm", mess, qos=2)
-        infot.wait_for_publish()
+        if self.__isNeedSMSAlarm and self.ntf.checkReadyNotification():
+            print("Pushing ...")
+            print(self.smsAlarmIDs)
+            # threading.Thread(target=self.ntf.call_sms, args=("0936261441", "Hello, this is a fucking test ...",))
+            self.ntf.call_sms(phoneNum="0936261441", contents="Hello, this is a fucking test ...")
+            print("Pushed")
+
+        self.__isNeedSMSAlarm = False
+
+        # mess='Hello Trung'
+        # infot = self.mqttc.publish("test/alarm", mess, qos=2)
+        # infot.wait_for_publish()
+        pass
 
     def closeEvent(self, event:PyQt5.QtGui.QCloseEvent):
         print('App is closing ...')

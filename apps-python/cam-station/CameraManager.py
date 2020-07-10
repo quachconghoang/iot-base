@@ -43,6 +43,9 @@ class CameraManager():
         self.process_scores = []
         self.drawResult = False
 
+        self.__needAlarming = False
+        self.__alarmingID = []
+
         self.size_raw_imgs = [IMG_w,    IMG_h]
         self.size_previews = [PRV_w,    PRV_h]
 
@@ -84,15 +87,17 @@ class CameraManager():
             scores = np.array(self.process_scores[index])
             num_boxes = boxes.shape[0]
             scale = 480 / 1280
+            self.alarmingID = []
             for i in range(num_boxes):
                 box = boxes[i]
                 score = scores[i]
 
-                color = (0, 255, 0)
                 if score < 0.9 :
                     color = (0,255,255)
                     if score < 0.85:
                         color = (0,0,255)
+                else:
+                    color = (0, 255, 0)
 
                 pt1 = ( int(box[0]*scale), int(box[1]*scale) )
                 pt2 = ( int(box[2]*scale), int(box[3]*scale) )
@@ -136,6 +141,21 @@ class CameraManager():
         #     self.camera_preview[index] = cv2.resize(frame, dsize=(PRV_w, PRV_h))
             # self.drawOverLay( self.camera_preview[index],index)
         return
+
+    def checkAlarming(self):
+        print("check alarming ...")
+        self.__needAlarming = False
+        for i in range(self.camera_number):
+            scores = np.array(self.process_scores[i])
+            for sc in scores:
+                if sc > 0.95:
+                    self.__needAlarming = True
+                if i not in self.__alarmingID:
+                    self.__alarmingID.append(i)
+
+        return self.__needAlarming, self.__alarmingID
+
+
 
     def callStoping(self):
         for i in range(self.camera_number):

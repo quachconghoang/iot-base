@@ -264,36 +264,16 @@
      <attribute name="horizontalHeaderDefaultSectionSize">
       <number>120</number>
      </attribute>
-     <row>
-      <property name="text">
-       <string>Quach Cong Hoang</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>...</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>...</string>
-      </property>
-     </row>
      <column>
       <property name="text">
-       <string>Phone number</string>
+       <string>Name</string>
       </property>
      </column>
-     <item row="0" column="0">
+     <column>
       <property name="text">
-       <string>+84936261441</string>
+       <string>Tel</string>
       </property>
-     </item>
-     <item row="1" column="0">
-      <property name="text">
-       <string/>
-      </property>
-     </item>
+     </column>
     </widget>
    </widget>
   </widget>
