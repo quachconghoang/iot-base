@@ -11,6 +11,7 @@ from mapwidget import MapWidget
 
 import paho.mqtt.client as mqtt
 from mplcanvas import MplCanvas
+from notification import NotificationServices
 import json
 
 import numpy as np
@@ -32,6 +33,7 @@ class MainWindow(QMainWindow):
 
         self.setupGUI_Video()
         self.setupGUI_Iots()
+        self.setupNotification()
 
         self.map_view = MapWidget(self)
         self.ui.pushBtn_Video.clicked.connect(self.openCamera)
@@ -78,6 +80,10 @@ class MainWindow(QMainWindow):
         self.timer_alarm.timeout.connect(self.alarming_message)
         self.timer_alarm.setInterval(3000)
         self.timer_alarm.start()
+
+    def setupNotification(self):
+        self.ntf = NotificationServices()
+        self.ntf.loadConfigs(fname='Notification.json')
 
     @Slot()
     def openCamera(self):
