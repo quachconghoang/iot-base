@@ -43,9 +43,6 @@ class CameraManager():
         self.process_scores = []
         self.drawResult = False
 
-        self.__needAlarming = False
-        self.__alarmingID = []
-
         self.size_raw_imgs = [IMG_w,    IMG_h]
         self.size_previews = [PRV_w,    PRV_h]
 
@@ -135,25 +132,22 @@ class CameraManager():
             batch.append(frame)
         # output = self.SSDModel.predict(batch)
         self.process_boxes, self.process_scores = self.SSDModel.predict_boxes(batch)
-
-        # for index in range(self.camera_number):
-        #     frame = cv2.cvtColor(output[index], cv2.COLOR_RGB2BGR)
-        #     self.camera_preview[index] = cv2.resize(frame, dsize=(PRV_w, PRV_h))
-            # self.drawOverLay( self.camera_preview[index],index)
+        
         return
 
     def checkAlarming(self):
-        print("check alarming ...")
-        self.__needAlarming = False
+        # print("check alarming ...")
+        needAlarming = False
+        alarmingID = []
         for i in range(self.camera_number):
             scores = np.array(self.process_scores[i])
             for sc in scores:
                 if sc > 0.95:
-                    self.__needAlarming = True
-                if i not in self.__alarmingID:
-                    self.__alarmingID.append(i)
+                    needAlarming = True
+                if i not in alarmingID:
+                    alarmingID.append(i)
 
-        return self.__needAlarming, self.__alarmingID
+        return needAlarming, alarmingID
 
 
 

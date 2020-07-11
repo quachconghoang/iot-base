@@ -221,6 +221,9 @@
      <string>Notification</string>
     </property>
     <widget class="QCheckBox" name="cB_Bell">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -231,6 +234,9 @@
      </property>
      <property name="text">
       <string>Bell</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QCheckBox" name="cB_SMS">
@@ -244,6 +250,9 @@
      </property>
      <property name="text">
       <string>SMS</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QTableWidget" name="tableWidget">
@@ -267,6 +276,11 @@
      <column>
       <property name="text">
        <string>Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Time</string>
       </property>
      </column>
      <column>

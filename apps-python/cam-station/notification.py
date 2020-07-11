@@ -1,7 +1,8 @@
 import serial
 import os, time
-import json
 from datetime import datetime
+import paho.mqtt.client as mqtt
+
 
 class NotificationServices():
 
@@ -9,23 +10,25 @@ class NotificationServices():
         #1 - Open Serial Port
         self.port = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=1)
         print('/dev/ttyUSB0 opened ...')
+        self.__transmit_AT_commands()
+
         ###
-        #2 - Create MQTT Connection
-        ###
-        ###
+        # 2 - Create MQTT Connection
+        self.mqttc = mqtt.Client()
+        self.mqttc.on_message = self.__on_message
+        self.mqttc.on_connect = self.__on_connect
+        self.mqttc.on_publish = self.__on_publish
+        self.mqttc.on_subscribe = self.__on_subscribe
+        # Uncomment to enable debug messages
+        # mqttc.on_log = on_log
+        self.mqttc.connect("127.0.0.1", 1883, 60)
+        self.mqttc.subscribe("FireAlarm/SMS", qos=0)
+        # mqttc.loop_forever()
+        # self.__mqttc.subscribe("FireAlarm/BELL", qos=0)
 
         self.user_list = []
-        self.__isReadyForSMS = True
-        self.__isReadyForBells = False
 
         pass
-
-    def loadConfigs(self, fname = 'Notification.json'):
-        with open(fname) as json_file:
-            data = json.load(json_file)
-            self.user_list = data['users']
-            # for p in self.user_list:
-            #     print(p)
 
     # def chmod_serial(self):
         # pass
@@ -34,9 +37,11 @@ class NotificationServices():
     def call_bells(self):
         pass
 
-    def call_sms(self, phoneNum = '0936261441', contents = "Hello HoangQC"):
-        self.__isReadyForSMS = False
-        self.__transmit_AT_commands()
+    def call_sms(self, phoneNum = '0936261441', contents = "Hello Admin"):
+        self.port.write(str.encode('AT+CNMI=2,1,0,0,0' + '\r\n'))  # New SMS Message Indications
+        rcv = self.port.read(10)
+        print(rcv)
+        time.sleep(1)
 
         self.port.write(str.encode('AT+CMGS="' + phoneNum + '"\r\n'))
         rcv = self.port.read(10)
@@ -55,14 +60,9 @@ class NotificationServices():
             rcv = self.port.read(10)
             print(rcv)
 
-        print("SMS is done!")
-        time.sleep(20)
-        self.__isReadyForSMS = True
+        print("An SMS is done!")
+        # time.sleep(20)
         pass
-
-    def checkReadyNotification(self):
-        return self.__isReadyForSMS
-
 
     def __transmit_AT_commands(self):
         sTime = 1
@@ -81,9 +81,25 @@ class NotificationServices():
         rcv = self.port.read(10)
         print(rcv)
         time.sleep(sTime)
-
-        self.port.write(str.encode('AT+CNMI=2,1,0,0,0' + '\r\n'))  # New SMS Message Indications
-        rcv = self.port.read(10)
-        print(rcv)
-        time.sleep(sTime)
         pass
+
+    def __on_connect(self, mqttc, obj, flags, rc):
+        print("rc: " + str(rc))
+
+    def __on_message(self, mqttc, obj, msg):
+        print(msg.topic + ": " + str(msg.payload))
+
+    def __on_publish(self, mqttc, obj, mid):
+        print("mid: " + str(mid))
+
+    def __on_subscribe(self, mqttc, obj, mid, granted_qos):
+        print("Subscribed: " + str(mid) + " " + str(granted_qos))
+
+    def __on_log(self, mqttc, obj, level, string):
+        print(string)
+
+if __name__ == "__main__":
+    ntf = NotificationServices()
+    ntf.mqttc.loop_forever()
+
+

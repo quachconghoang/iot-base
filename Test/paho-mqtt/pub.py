@@ -42,7 +42,7 @@ mqttc.loop_start()
 
 while(True):
 	mess = str(randint(10,40))
-	infot = mqttc.publish("test", mess, qos=2)
+	infot = mqttc.publish("FireAlarm/SMS", mess, qos=2)
 	infot.wait_for_publish()
 	print("looping...", mess)
 	time.sleep(10)

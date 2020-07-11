@@ -11,9 +11,7 @@ from mapwidget import MapWidget
 
 import paho.mqtt.client as mqtt
 from mplcanvas import MplCanvas
-from notification import NotificationServices
 import json
-import threading
 
 import numpy as np
 from config import *
@@ -82,19 +80,18 @@ class MainWindow(QMainWindow):
         self.timer_alarm.setInterval(3000)
         self.timer_alarm.start()
 
-        self.__isNeedSMSAlarm = False
-        self.smsAlarmIDs = []
-
     def setupNotification(self):
-        self.ntf = NotificationServices()
-        self.ntf.loadConfigs(fname='Notification.json')
-
         # Draw The Table
-        self.ui.tableWidget.setRowCount(len(self.ntf.user_list))
-        for id in range(len(self.ntf.user_list)):
-            uItem = self.ntf.user_list[id]
+        fname = 'Notification.json'
+        with open(fname) as json_file:
+            data = json.load(json_file)
+            self.user_list = data['users']
+        self.ui.tableWidget.setRowCount(len(self.user_list))
+        for id in range(len(self.user_list)):
+            uItem = self.user_list[id]
             self.ui.tableWidget.setItem(id, 0, QTableWidgetItem(uItem['name']))
-            self.ui.tableWidget.setItem(id, 1,  QTableWidgetItem(uItem['tel']))
+            self.ui.tableWidget.setItem(id, 1,  QTableWidgetItem(uItem['time']))
+            self.ui.tableWidget.setItem(id, 2, QTableWidgetItem(uItem['tel']))
 
         pass
 
@@ -119,14 +116,15 @@ class MainWindow(QMainWindow):
     def img_processing(self):
         if(self.ui.check_proc.isChecked()):
             if(self.mng.SSDModel.isReady == False): self.mng.SSDModel.preparingModel()
-
-                # self.mng.drawResult = False
             self.mng.callSSD()
             rs, ids = self.mng.checkAlarming()
-            if rs == True and self.__isNeedSMSAlarm == False:
-                self.__isNeedSMSAlarm = True
-                self.smsAlarmIDs = ids
-                print("Checked ...")
+
+            if rs:
+                self.ui.cB_Bell.setEnabled(True)
+                mess = 'Fire in the holes'
+                infot = self.mqttc.publish("FireAlarm/SMS", mess, qos=2)
+                infot.wait_for_publish()
+                print(ids)
 
             self.mng.drawResult = True
         else:
@@ -135,12 +133,12 @@ class MainWindow(QMainWindow):
     @Slot()
     def processStatusChanged(self):
         print("..." + str(self.ui.check_proc.checkState()))
+        pass
 
     @Slot()
     def notifcationStatusChanged(self):
-        # self.ntf.call_sms(phoneNum="0936261441", contents="Hello, this is a test ...")
         print("...")
-
+        pass
 
     @Slot()
     def updateVideos(self):
@@ -170,17 +168,8 @@ class MainWindow(QMainWindow):
         pass
 
     def alarming_message(self):
-        if self.__isNeedSMSAlarm and self.ntf.checkReadyNotification():
-            print("Pushing ...")
-            print(self.smsAlarmIDs)
-            # threading.Thread(target=self.ntf.call_sms, args=("0936261441", "Hello, this is a fucking test ...",))
-            self.ntf.call_sms(phoneNum="0936261441", contents="Hello, this is a fucking test ...")
-            print("Pushed")
-
-        self.__isNeedSMSAlarm = False
-
         # mess='Hello Trung'
-        # infot = self.mqttc.publish("test/alarm", mess, qos=2)
+        # infot = self.mqttc.publish("FireAlarm/SMS", mess, qos=2)
         # infot.wait_for_publish()
         pass
 

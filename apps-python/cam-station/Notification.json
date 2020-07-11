@@ -1,10 +1,10 @@
 {
   "users":
   [
-    {"name": "HoangQC",   "tel": "0936261441"},
-    {"name": "TriemPM",   "tel": "0915466881"},
-    {"name": "TrungVM",   "tel": "0848184614"},
-    {"name": "SonNT",     "tel": "0974625485"}
+    {"name": "HoangQC",   "tel": "0936261441", "time":  "23:00 - 05:00"},
+    {"name": "TrienPM",   "tel": "0915466881", "time":  "05:00 - 11:00"},
+    {"name": "TrungVM",   "tel": "0848184614", "time":  "11:00 - 17:00"},
+    {"name": "SonNT",     "tel": "0974625485", "time":  "17:00 - 23:00"}
   ],
   "bells message": "demo/bell/01"
 }
