@@ -1,5 +1,5 @@
 import serial
-import os, time
+import os, time, json
 from datetime import datetime
 import paho.mqtt.client as mqtt
 
@@ -23,18 +23,21 @@ class NotificationServices():
         # mqttc.on_log = on_log
         self.mqttc.connect("127.0.0.1", 1883, 60)
         self.mqttc.subscribe("FireAlarm/SMS", qos=0)
+        # self.mqttc.subscribe("FireAlarm/BELL", qos=0)
         # mqttc.loop_forever()
         # self.__mqttc.subscribe("FireAlarm/BELL", qos=0)
 
         self.user_list = []
+        self.need_SMS = False
+        self.need_SMS_Tel = '0936261441'
 
         pass
 
-    # def chmod_serial(self):
-        # pass
-        #https://stackoverflow.com/questions/13045593/using-sudo-with-python-script
-
     def call_bells(self):
+        pass
+
+    def print_SMS_Info(self):
+        print('SMS Info: \n - Tel: ' + self.need_SMS_Tel + '\n - Contents: ' + self.need_SMS_Contents)
         pass
 
     def call_sms(self, phoneNum = '0936261441', contents = "Hello Admin"):
@@ -88,6 +91,10 @@ class NotificationServices():
 
     def __on_message(self, mqttc, obj, msg):
         print(msg.topic + ": " + str(msg.payload))
+        self.need_SMS = True
+        payload = json.loads(msg.payload)
+        self.need_SMS_Tel = str(payload['tel'])
+        self.need_SMS_Contents = 'Serious warning on camera ' + str(payload['cam'])
 
     def __on_publish(self, mqttc, obj, mid):
         print("mid: " + str(mid))
@@ -100,6 +107,16 @@ class NotificationServices():
 
 if __name__ == "__main__":
     ntf = NotificationServices()
-    ntf.mqttc.loop_forever()
+    ntf.mqttc.loop_start()
+    while (True):
+        if  ntf.need_SMS:
+            print('Start SMS ...')
+            ntf.print_SMS_Info()
+            ntf.call_sms(phoneNum=ntf.need_SMS_Tel,contents=ntf.need_SMS_Contents)
+            time.sleep(10)
+            ntf.need_SMS = False
+        time.sleep(1)
+
+
 
 

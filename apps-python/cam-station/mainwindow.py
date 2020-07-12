@@ -12,6 +12,7 @@ from mapwidget import MapWidget
 import paho.mqtt.client as mqtt
 from mplcanvas import MplCanvas
 import json
+from datetime import datetime
 
 import numpy as np
 from config import *
@@ -57,6 +58,8 @@ class MainWindow(QMainWindow):
         self.timer_proc.start()
 
         self.ui.check_proc.setEnabled(False)
+        self.warning_time = datetime.now()
+        self.warning_level = 0
 
         # self.ui.check_proc.clicked.connect(self.processStatusChanged)
         self.ui.cB_Bell.clicked.connect(self.notifcationStatusChanged)
@@ -90,7 +93,7 @@ class MainWindow(QMainWindow):
         for id in range(len(self.user_list)):
             uItem = self.user_list[id]
             self.ui.tableWidget.setItem(id, 0, QTableWidgetItem(uItem['name']))
-            self.ui.tableWidget.setItem(id, 1,  QTableWidgetItem(uItem['time']))
+            self.ui.tableWidget.setItem(id, 1, QTableWidgetItem(uItem['time']))
             self.ui.tableWidget.setItem(id, 2, QTableWidgetItem(uItem['tel']))
 
         pass
@@ -119,12 +122,30 @@ class MainWindow(QMainWindow):
             self.mng.callSSD()
             rs, ids = self.mng.checkAlarming()
 
+            triggerTime = datetime.now()
+            delta_Time = (triggerTime - self.warning_time).seconds
+
+
             if rs:
                 self.ui.cB_Bell.setEnabled(True)
-                mess = 'Fire in the holes'
-                infot = self.mqttc.publish("FireAlarm/SMS", mess, qos=2)
-                infot.wait_for_publish()
-                print(ids)
+                self.warning_time = datetime.now()  # reset time stamp detect smoke objects
+                if delta_Time < 10.0:
+                    self.warning_level +=1 # Continue state
+                else:
+                    self.warning_level = 1 # ReStart state
+                print('Current warning level ' + str(self.warning_level))
+
+                if self.warning_level > MAX_WARNING:
+                    _user = self.user_list[0] #SELECT HOANGQC
+                    mess = json.dumps({"tel": _user["tel"], "cam": ids})
+                    infot = self.mqttc.publish("FireAlarm/SMS", mess, qos=2)
+                    infot.wait_for_publish()
+                    print(ids)
+
+            else:
+                if delta_Time > 15.0:
+                    self.warning_level = 0 # Reset Warning state
+                    # print('Reset warning state ... ... ...')
 
             self.mng.drawResult = True
         else:
@@ -168,9 +189,10 @@ class MainWindow(QMainWindow):
         pass
 
     def alarming_message(self):
-        # mess='Hello Trung'
-        # infot = self.mqttc.publish("FireAlarm/SMS", mess, qos=2)
-        # infot.wait_for_publish()
+        mess='OFF'
+        if self.ui.cB_Bell.isChecked(): mess='ON'
+        infot = self.mqttc.publish("FireAlarm/BELL", mess, qos=2)
+        infot.wait_for_publish()
         pass
 
     def closeEvent(self, event:PyQt5.QtGui.QCloseEvent):
