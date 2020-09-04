@@ -14,5 +14,12 @@
             2
           ],
   "user-id": "admin",
-  "user-pwd": "1234Abc."
+  "user-pwd": "1234Abc.",
+  "locations-x":
+  [
+    "/home/hoangqc/Desktop/001.mp4",
+    "/home/hoangqc/Desktop/002.mp4",
+    "/home/hoangqc/Desktop/003.mp4",
+    "/home/hoangqc/Desktop/004.mp4"
+  ]
 }
