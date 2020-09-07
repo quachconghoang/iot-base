@@ -83,7 +83,7 @@ class CameraManager():
             boxes = np.array(self.process_boxes[index])
             scores = np.array(self.process_scores[index])
             num_boxes = boxes.shape[0]
-            scale = 480 / 1280
+            scale = PRV_w / IMG_w
             self.alarmingID = []
             for i in range(num_boxes):
                 box = boxes[i]
@@ -142,7 +142,7 @@ class CameraManager():
         for i in range(self.camera_number):
             scores = np.array(self.process_scores[i])
             for sc in scores:
-                if sc > 0.95:
+                if sc > THRES_ALARMING:
                     needAlarming = True
                 if i not in alarmingID:
                     alarmingID.append(i)
