@@ -21,5 +21,14 @@
     "/home/hoangqc/Desktop/002.mp4",
     "/home/hoangqc/Desktop/003.mp4",
     "/home/hoangqc/Desktop/004.mp4"
+  ],
+  "mph-id" : "admin",
+  "mph-pwd": "abcd1234",
+  "mph-locations":
+  [
+    "192.168.1.150:554/Streaming/Channels/101/",
+    "192.168.1.150:554/Streaming/Channels/201/",
+    "rtsp://admin:abcd1234@192.168.1.150:554/Streaming/Channels/301/",
+    "/home/cit-ws/Desktop/001.mp4"
   ]
 }

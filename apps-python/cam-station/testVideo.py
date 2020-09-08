@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from SSDLib import SSDSmoke
 
-path4 = "/home/hoangqc/Desktop/005.mp4"
+path4 = "/home/hoangqc/Desktop/002.mp4"
 raw_size = (1280, 720)
 proc_size = (640, 360)
 
