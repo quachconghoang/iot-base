@@ -88,10 +88,11 @@ class CameraManager():
         cv2.putText(img, str(index), (440, 40), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 0, 255), thickness=3)
 
         #Draw ROI
-        scl = PRV_w/PROC_resize[0]
-        p1 = (int(PROC_x*scl), int(PROC_y*scl))
-        p2 = (int((PROC_x+PROC_w)*scl) - 1, int((PROC_y+PROC_h)*scl) - 1)
-        cv2.rectangle(img, pt1=p1, pt2=p2, color=(0,255,255))
+        if DRAW_ROI:
+            scl = PRV_w/PROC_resize[0]
+            p1 = (int(PROC_x*scl), int(PROC_y*scl))
+            p2 = (int((PROC_x+PROC_w)*scl) - 1, int((PROC_y+PROC_h)*scl) - 1)
+            cv2.rectangle(img, pt1=p1, pt2=p2, color=(0,255,255))
 
         #Draw Result
         if(self.drawResult):

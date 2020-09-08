@@ -4,11 +4,12 @@ IMG_w = 1280
 IMG_h = 720
 CAM_interval =  0.015
 
-PROC_x = 140
+PROC_x = 200
 PROC_y = 0
-PROC_w = 360 # Process image width
-PROC_h = 360 # Process image height
+PROC_w = 256 # Process image width
+PROC_h = 256 # Process image height
 PROC_resize = (640,360)
+DRAW_ROI = True
 
 k_Title_App = 'Ứng dụng Quản lý Camera Cảnh báo cháy'
 k_Title_AppMap = 'Sơ đồ tòa nhà'
