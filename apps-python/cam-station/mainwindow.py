@@ -23,10 +23,14 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.ui.mainToolBar.close()
+        self.ui.menuBar.close()
 
         self.setWindowTitle(k_Title_App)
         # self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
-        self.setFixedSize(1280,800)
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        # self.setFixedSize(1280,800)
+        self.showFullScreen()
 
         self.mng = CameraManager()
         self.mng.loadInfo('./IP_Camera.json')
